@@ -47,47 +47,110 @@
             font-size: 1.2em;
             margin-top: 20px;
         }
+        #new-test {
+            display: none;
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 <body>
     <div class="quiz-container">
         <div id="quiz"></div>
         <button id="submit">Submit Quiz</button>
+        <button id="new-test">New Test</button>
         <div id="result" class="result"></div>
     </div>
 
-
 <script>
-    const quizData = [
-        {
-            question: 'What do you call fake spagehtti?',
-            A: "An Accomplishment",
-            B: "Sensational",
-            C: "Fetteccine Al-fake-o",
-            D: "An Impasta!",
-            correct: "D"
-        },
-        {
-            question: "What goes around the world but never moves?",
-            A: "Grass",
-            B: "Water",
-            C: "The Sun",
-            D: "The Equator",
-            correct: "D" 
-        },
-        {
-            question: "What is full of holes but can still contain water?",
-            A: "Swiss Cheese",
-            B: "A Bucket",
-            C: 'A "Netflix Original" Action Movie',
-            D: "A Holy Cup",
-            correct: "C" 
-        }
+    const questionSets= [
+        [
+            {
+                question: "What do you call fake spagehtti?",
+                A: "An Accomplishment",
+                B: "Sensational",
+                C: "Fetteccine Al-fake-o",
+                D: "An Impasta!",
+                correct: "D"
+            },
+            {
+                question: "What goes around the world but never moves?",
+                A: "Grass",
+                B: "Water",
+                C: "The Sun",
+                D: "The Equator",
+                correct: "D" 
+            },
+            {
+                question: "What is full of holes but can still contain water?",
+                A: "Swiss Cheese",
+                B: "A Bucket",
+                C: 'A "Netflix Original" Action Movie',
+                D: "A Holy Cup",
+                correct: "C" 
+            }
+        ],
+        [
+            {
+                question: 'In a website browser address bar, what does "www" stand for?',
+                A: "Wendy's Winter Wonderland",
+                B: "Wicked Wicked Wicked",
+                C: "World Wide Web",
+                D: "Web World Wide",
+                correct: "C"
+            },
+            {
+                question: "What is the tiny piece at the end of a shoelace called?",
+                A: "Lace Tip",
+                B: "An Aglet",
+                C: "String End",
+                D: "Plastic",
+                correct: "B" 
+            },
+            {
+                question: "Originally, Amazon only sold what kind of product?",
+                A: "Water",
+                B: "Livestock",
+                C: "Clothes",
+                D: "Books",
+                correct: "D" 
+            }
+        ],
+        [
+            {
+                question: "Who painted the Mona Lisa?",
+                A: "Leonardo da Vinci",
+                B: "Leonardo DiCaprio",
+                C: "Leon Da Vinny",
+                D: "Leonious Ceaser",
+                correct: "A"
+            },
+            {
+                question: "Chrome, Safari, Firefox and Explorer are different types of what?",
+                A: "Web browsers",
+                B: "Internet",
+                C: "Routers",
+                D: "Personality Types",
+                correct: "A" 
+            },
+            {
+                question: "What is the human body's heaviest organ?",
+                A: "Heart",
+                B: "Stomach",
+                C: "Skin",
+                D: "Spleen",
+                correct: "C" 
+            }
+        ]
     ];
+
+    let currentSetIndex = 0;
+    let quizData = questionSets[currentSetIndex];
 
     const quizContainer = document.getElementById('quiz');
     const resultContainer = document.getElementById('result');
     const submitButton = document.getElementById('submit');
+    const newTestButton = document.getElementById('new-test');
 
     function loadQuiz() {
         const output = [];
@@ -110,7 +173,7 @@
                 `<div class ="question">${currentQuestion.question}</div>
                 <ul class="answers">${answers.join('')}</ul>`
             )
-            });
+        });
 
         quizContainer.innerHTML = output.join('');
     }
@@ -133,10 +196,32 @@
             }
         });
         resultContainer.innerHTML = `${numCorrect} out of ${quizData.length}`;
+
+        if (numCorrect === quizData.length) {
+                newTestButton.style.display = 'block';
+            } else {
+                newTestButton.style.display = 'none';
+            }
+        }
+
+        function loadNewTest() {
+            currentSetIndex++;
+            if (currentSetIndex >= questionSets.length) {
+                resultContainer.innerHTML = "No more question available!";
+                newTestButton.style.display = 'none';
+                return;
+            }
+
+            quizData = questionSets[currentSetIndex];
+            resultContainer.innerHTML = '';
+            newTestButton.style.display = 'none';
+            loadQuiz();
+        
     }
 
     loadQuiz();
     submitButton.addEventListener('click', showResults);
+    newTestButton.addEventListener('click', loadNewTest);
 </script>
 
 </body>
